@@ -2,11 +2,18 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import Restaurants from '../screens/Restaurants'
-import Favorites from '../screens/Favorites'
-import Account from "../screens/Account";
-import Search from "../screens/Search";
-import TopRestaurants from "../screens/TopRestaurants";
+import RestaurantsStack from "./RestaurantsStack";
+import AccountStack from "./AccountStack";
+import FavoritesStack from "./FavoritesStack";
+import SearchStack from "./SearchStack";
+import TopRestaurantsStack from "./TopRestaurantsStack";
+
+import { Icon } from 'react-native-elements'
+// import Restaurants from '../screens/Restaurants'
+// import Favorites from '../screens/Favorites'
+// import Account from "../screens/Account";
+// import Search from "../screens/Search";
+// import TopRestaurants from "../screens/TopRestaurants";
 
 
 
@@ -16,36 +23,46 @@ export default function Navigation() {
     return(
         <NavigationContainer>
 
-          <Tab.Navigator>
+          <Tab.Navigator
+          initialRouteName="restaurants"
+          tabBarOptions={{
+              inactiveTintColor: '#646464',
+              activeTintColor: '#00a680'
+          }}
+          screenOptions={({route}) => ({
+              tabBarIcon:({color}) =>screenOptions(route, color)
+
+          })} 
+          >
                    
                   <Tab.Screen 
                   name= 'restaurants' 
-                  component={Restaurants}
+                  component={RestaurantsStack}
                   options={{title:"Restaurantes"}} 
                   />
                   
                   <Tab.Screen 
                   name= 'favorites' 
-                  component={Favorites}
+                  component={FavoritesStack}
                   options={{title:"Favoritos"}} 
                   />
 
                   <Tab.Screen 
                   name= 'account' 
-                  component={Account}
+                  component={AccountStack}
                   options={{title:"Cuenta"}} 
                   />
 
                   <Tab.Screen 
                   name= 'search' 
-                  component={Search}
+                  component={SearchStack}
                   options={{title:"Buscar"}} 
                   />
 
                   <Tab.Screen 
                   name= 'top-restaurants' 
-                  component={TopRestaurants}
-                  options={{title:"top 5"}} 
+                  component={TopRestaurantsStack}
+                  options={{title:"Top 5"}} 
                   />
 
                   
@@ -56,4 +73,32 @@ export default function Navigation() {
         </NavigationContainer>  
     )
     
+}
+
+function screenOptions(route, color) {
+    let iconName
+    switch (route.name) {
+        case 'restaurants':
+            iconName='compass-outline'
+            break
+        case 'favorites':
+            iconName='heart-outline'
+            break
+        case 'top-restaurants':
+            iconName='star-outline'
+            break
+        case 'search':
+            iconName='magnify'
+            break
+        case'account':
+            iconName='home-outline'
+            break   
+
+
+    }
+    
+    return(
+        <Icon type='material-community' name={iconName} size={22} color={color}/>
+    ) 
+
 }
