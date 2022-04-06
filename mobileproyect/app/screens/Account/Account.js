@@ -4,6 +4,7 @@ import firebase from "firebase"
 import UserGuest from "./UserGuest"
 import UserLogged from "./UserLogged"
 import Loading from "../../components/Loading"
+import Sesion from "../../components/User/Sesion"
 
 export default function Account(){
     const [login, setLogin] = useState(null)

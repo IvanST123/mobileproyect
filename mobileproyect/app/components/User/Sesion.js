@@ -2,18 +2,34 @@ import React, {useState} from "react"
 import { StyleSheet, View, Text } from "react-native"
 import { Input, Icon, Button  } from "react-native-elements"
 import { validateEmail } from "../../utils/validation"
-import firebase from "firebase"
 import {useNavigation} from "@react-navigation/native"
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
+import firebase from "firebase/app"
+import "firebase/auth"
+import { emailValidator } from '../../utils/validation'
+import { passwordValidator } from '../../utils/passwordValidator'
+
+
+//antes era resgisterformjs
 
 export default function RegisterForm(props){
     const {toastRef} =props
     const [showPassword, setShowPassword] = useState(false)
-    const [showRepeatPassword, setShowRepeatPassword] = useState (false)
     const [formData, setFormData] = useState(defaultFormValues())
     const navigation = useNavigation()
-           
-     const onSubmit = () => {
-         if(formData.email.length===0||formData.password.length===0||formData.repeatPassword.length===0){
+const user = userCredential.user
+    const auth = firebase.auth()
+
+    const LoginForm = (props) => {
+        const [email, setEmail] = useState({ value: '', error: '', class: '' });
+        const [password, setPassword] = useState({ value: '', error: '', class: '' });
+        const [isFormValid, setisFormValid] = useState(false);
+        const validateForm = () => {
+            const validateEmail = emailValidator(email.value);
+            const validatePassword = passwordValidator(password.value);
+    
+    
+         if(validateForm.email.length===0||validateForm.password.length===0){
               toastRef.current.show({
                  type: 'error',
                  position: 'top',
@@ -21,7 +37,7 @@ export default function RegisterForm(props){
                  text2: 'Todos los campos son requeridos',
                  visibilityTime: 3000,
               });
-            } else if (!validateEmail(formData.email)){
+            } else if (!validateEmail(email.value)){
                 toastRef.current.show({
                     type: 'error',
                     position: 'top',
@@ -29,36 +45,31 @@ export default function RegisterForm(props){
                     text2: 'el email no es el correcto',
                     visibilityTime: 3000,
                  });
-            } else if (formData.password !== formData.repeatPassword){
-                toastRef.current.show({
-                    type: 'error',
-                    position: 'top',
-                    text1: 'password',
-                    text2: 'Las contraseñas deben ser identicas',
-                    visibilityTime: 3000,
-                 });
-            } else if (formData.password.length < 6){
+            } else if (!validatePassword(password.value)){
                 toastRef.current.show({
                     type: 'error',
                     position: 'top',
                     text1: 'Password',
-                    text2: 'La longitud minima de la contraseña es de 6 caracteres',
+                    text2: 'contraseña mal',
                     visibilityTime: 3000,
                  });
+                 
             } else{
                 firebase.auth()
-                .createUserWithEmailAndPassword(formData.email, formData.password)
-                .then((response)=>{
+                .signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential)=>{
+                    const user = userCredential.user;
                     navigation.navigate("account")
                 })
                 .catch((err)=>{
                     toastRef.current.show({
                         type: 'error',
                         position: 'top',
-                        text1: 'Cuenta',
-                        text2: 'Este correo ya ha sido registrado',
+                        text1: 'Sesion',
+                        text2: 'correo invalido o no registrado',
                         visibilityTime: 3000,
                      });
+                     
             })
 
      }
@@ -93,22 +104,10 @@ export default function RegisterForm(props){
                  
                  />}
             />
-             <Input
+             
             
-                 placeholder="Repetir contraseña"
-                 containerStyle={styles.inputForm}
-                 password={true}
-                 secureTextEntry={showRepeatPassword ? false : true}
-                 onChange={(e)=>onChange(e, "repeatPassword")}
-                 rightIcon={<Icon type="material-community" 
-                 name={showRepeatPassword ? "eye-off-outline" : "eye-outline"} iconStyle={styles.iconRight} 
-                 onPress={()=> setShowRepeatPassword(!showRepeatPassword)}
-                 
-                 
-                 />}
-            />
              <Button
-                title="UNETE"
+                title="inicia sesion"
                 containerStyle={styles.btnContainerRegister}
                 buttonStyle={styles.btnRegister} //cambiar color de caja
                 onPress={onSubmit}
@@ -121,8 +120,8 @@ export default function RegisterForm(props){
 function defaultFormValues() {
     return{
         email: '',
-        password: '',
-        repeatPassword: ''
+        password: ''
+    
     }
 }
 
@@ -147,3 +146,4 @@ iconRight:{
     color: "#c1c1c1"
 }
 })
+  }
