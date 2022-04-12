@@ -1,63 +1,62 @@
-import React from "react"
-import { StyleSheet, View, ScrollView, Text, Image } from "react-native"
-import { Divider } from "react-native-elements"
-import { useNavigation } from "@react-navigation/native"
+import React, {useRef} from 'react'
+import { StyleSheet, View, ScrollView, Text, Image } from 'react-native'
+import { Divider } from 'react-native-elements'
+import { useNavigation } from '@react-navigation/native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import LoginForm from '../../components/Account/LoginForm'
+import Toast from 'react-native-toast-message'
+
 
 export default function Login(){
+    const toastRef = useRef()
     return(
-    <ScrollView >
+    
+        <KeyboardAwareScrollView>
         <Image
-            source={require("../../../assets/img/icono.png")}
-            resizeMode="contain"
-            style={styles.logo}
+        source={require('../../../assets/cuatro.png')}
+        resizeMode='contain'
+        style={styles.logo}
         />
-        <View style={styles.viewContainer}> 
-         <Text>Login Form</Text>
-         <CreateAccount/>
-
+        <View style={styles.viewContainer}>
+            <Text>Login Form</Text>
+            <LoginForm toastRef={toastRef}/>
+            <CreateAccount/>
         </View>
-
-        <Divider style={styles.divider}/>
-          
-       
-
-    </ScrollView>
- )
+        <Toast ref={toastRef}/>
+        <Divider  style={styles.divider}/>
+    
+        </KeyboardAwareScrollView>
+    )
 }
 
 function CreateAccount(){
     const navigation = useNavigation()
     return(
         <Text style = {styles.textRegister}>
-         aun no tienes cuenta? {" "}
+            ¿Aún no tienes cuenta? {''}
             <Text
-              style = {styles.linkRegister}
-              onPress={()=>navigation.navigate("register")}
-            ><br/>
-               Sign Up 
+                style = {styles.linkRegister}
+                onPress={()=> navigation.navigate('register')}
+            >
+             Sign Up
             </Text>
-        </Text>
-
+        </Text> 
     )
-    
 }
 
 const styles = StyleSheet.create({
     logo:{
-        width:"100%",
+        width:'100%',
         height: 150,
-        marginTop:20
+        marginTop: 20
     },
     viewContainer:{
         marginRight:40,
-        marginLeft:40,
-        textAlign:"center"
-
+        marginLeft: 40
     },
     divider:{
-        backgroundColor:"#00a680",
+        backgroundColor: '#00a680',
         margin: 40
-
     },
     textRegister:{
         marginTop: 15,
@@ -65,9 +64,7 @@ const styles = StyleSheet.create({
         marginRight: 10
     },
     linkRegister:{
-        color: "#00a580",
-        fontWeight: "bold"
-
+        color: '#00a680',
+        fontWeight: 'bold'
     }
-
 })
