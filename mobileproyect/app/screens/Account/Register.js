@@ -2,7 +2,7 @@ import React,{useRef} from "react"
 import { StyleSheet, View, Text, Image } from "react-native"
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import RegisterForm from "../../components/Account/RegisterForm"
-import Toast from 'react-native-toast-message'
+import Toast from "react-native-toast-message"
 
 export default function Register(){
     const toastRef = useRef()
